@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Naylah;
 using Needs.API.ORM;
 using System;
 using System.Collections.Generic;
@@ -12,33 +14,30 @@ using System.Threading.Tasks;
 
 namespace Needs.API
 {
-    public class Test
+    public class NeedsService : Service<NeedsServiceOptions>
     {
-        public string Id { get; set; }
-
-
-        public Test()
+        public NeedsService(IHostEnvironment environment, IConfiguration configuration) : base(environment, configuration)
         {
-            Id = Guid.NewGuid().ToString();
+            Options.Name = "Needs API";
         }
-    }
 
-    public class Startup
-    {
-        public void ConfigureServices(IServiceCollection services)
+        public override void ConfigureServices(IServiceCollection services)
         {
+            base.ConfigureServices(services);
+
             services.AddControllers();
 
             services.AddMemoryCache();
 
-            services.AddScoped<Test>();
             services.AddDbContext<NeedsDbContext>(opt => opt.UseInMemoryDatabase("NeedsDB"));
 
             services.AddSwaggerGen();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public override void Configure(IApplicationBuilder app)
         {
+            base.Configure(app);
+
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -46,20 +45,11 @@ namespace Needs.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Needs API V1");
             });
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("HOME");
-                });
             });
         }
     }

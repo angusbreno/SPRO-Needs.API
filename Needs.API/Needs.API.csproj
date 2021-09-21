@@ -12,6 +12,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="Naylah.AspNetCore" Version="2021.9.16.2" />
+    <PackageReference Include="Naylah.Core" Version="2021.9.16.2" />
+    <PackageReference Include="Naylah.Data.Providers" Version="2021.9.16.2" />
   </ItemGroup>
 
   <ItemGroup>
